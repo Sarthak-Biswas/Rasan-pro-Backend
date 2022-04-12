@@ -1,0 +1,35 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: 'Ration Pro Sample SAM Template for Ration Pro
+
+  '
+Globals:
+  Function:
+    Timeout: 3
+Resources:
+  ApiGatewayApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: Prod
+      Cors:
+        AllowMethods: '''POST, GET, OPTIONS'''
+        AllowHeaders: '''*'''
+        AllowOrigin: '''*'''
+        MaxAge: '''600'''
+        AllowCredentials: false
+  removeCart:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: removeCart
+      CodeUri: s3://ration-pro-qa/d8430abe7e8165cb7ef7cb829843f1b0
+      Handler: app.lambda_handler
+      Runtime: python3.9
+      Events:
+        removeCart:
+          Type: Api
+          Properties:
+            Path: /user/removeCart
+            Method: post
+            RestApiId:
+              Ref: ApiGatewayApi
+      Role: arn:aws:iam::568788240773:role/dev-admin

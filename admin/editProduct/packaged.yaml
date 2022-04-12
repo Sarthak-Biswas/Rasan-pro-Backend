@@ -1,0 +1,35 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: 'Ration Pro Sample SAM Template for Ration Pro
+
+  '
+Globals:
+  Function:
+    Timeout: 10
+Resources:
+  ApiGatewayApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: Prod
+      Cors:
+        AllowMethods: '''POST, GET, OPTIONS'''
+        AllowHeaders: '''*'''
+        AllowOrigin: '''*'''
+        MaxAge: '''600'''
+        AllowCredentials: false
+  editProduct:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: editProduct
+      CodeUri: s3://ration-pro-qa/69674701168dd1ef4740b6c01c7db7ec
+      Handler: app.lambda_handler
+      Runtime: python3.9
+      Events:
+        editProduct:
+          Type: Api
+          Properties:
+            Path: /admin/editProduct
+            Method: post
+            RestApiId:
+              Ref: ApiGatewayApi
+      Role: arn:aws:iam::568788240773:role/dev-admin

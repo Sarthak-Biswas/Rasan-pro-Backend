@@ -1,0 +1,35 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: 'Ration Pro Sample SAM Template for Ration Pro
+
+  '
+Globals:
+  Function:
+    Timeout: 20
+Resources:
+  ApiGatewayApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: Prod
+      Cors:
+        AllowMethods: '''POST, GET, OPTIONS'''
+        AllowHeaders: '''*'''
+        AllowOrigin: '''*'''
+        MaxAge: '''600'''
+        AllowCredentials: false
+  placeOrder:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: placeOrder
+      CodeUri: placeOrder
+      Handler: app.lambda_handler
+      Runtime: python3.9
+      Events:
+        placeOrder:
+          Type: Api
+          Properties:
+            Path: /user/placeOrder
+            Method: post
+            RestApiId:
+              Ref: ApiGatewayApi
+      Role: arn:aws:iam::568788240773:role/dev-admin

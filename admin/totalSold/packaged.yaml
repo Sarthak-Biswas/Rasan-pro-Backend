@@ -1,0 +1,35 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: 'Ration Pro Sample SAM Template for Ration Pro
+
+  '
+Globals:
+  Function:
+    Timeout: 5
+Resources:
+  ApiGatewayApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: Prod
+      Cors:
+        AllowMethods: '''POST, GET, OPTIONS'''
+        AllowHeaders: '''*'''
+        AllowOrigin: '''*'''
+        MaxAge: '''600'''
+        AllowCredentials: false
+  totalSold:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: totalSold
+      CodeUri: s3://ration-pro-qa/ad197a1c8350fa3eec4e9bb1ec90edf0
+      Handler: app.lambda_handler
+      Runtime: python3.9
+      Events:
+        totalSold:
+          Type: Api
+          Properties:
+            Path: /admin/totalSold
+            Method: post
+            RestApiId:
+              Ref: ApiGatewayApi
+      Role: arn:aws:iam::568788240773:role/dev-admin

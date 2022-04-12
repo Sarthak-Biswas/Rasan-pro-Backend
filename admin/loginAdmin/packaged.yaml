@@ -1,0 +1,35 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: 'Ration Pro Sample SAM Template for Ration Pro
+
+  '
+Globals:
+  Function:
+    Timeout: 3
+Resources:
+  ApiGatewayApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: Prod
+      Cors:
+        AllowMethods: '''POST, GET, OPTIONS'''
+        AllowHeaders: '''*'''
+        AllowOrigin: '''*'''
+        MaxAge: '''600'''
+        AllowCredentials: true
+  loginAdmin:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: loginAdmin
+      CodeUri: s3://ration-pro-qa/819bf9fdb86fd06ff72e40928519ce09
+      Handler: app.lambda_handler
+      Runtime: python3.9
+      Events:
+        loginAdmin:
+          Type: Api
+          Properties:
+            Path: /admin/loginAdmin
+            Method: post
+            RestApiId:
+              Ref: ApiGatewayApi
+      Role: arn:aws:iam::568788240773:role/dev-admin
